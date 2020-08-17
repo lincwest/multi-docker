@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t lincwest/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run lincwest/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t lincwest/multi-client ./client
+  - docker build -t lincwest/multi-nginx ./nginx
+  - docker build -t lincwest/multi-server ./server
+  - docker build -t lincwest/multi-worker ./worker
+# log in to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+# Take those images and push them to docker hub
+  - docker push lincwest/multi-client
+  - docker push lincwest/multi-nginx
+  - docker push lincwest/multi-server
+  - docker push lincwest/multi-worker
