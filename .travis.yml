@@ -9,14 +9,14 @@ script:
   - docker run -e CI=true lincwest/react-test npm test -- --coverage
 
 after_success:
-  - docker build -t lincwest/multi-client:latest ./client
-  - docker build -t lincwest/multi-nginx:latest ./nginx
-  - docker build -t lincwest/multi-server:latest ./server
-  - docker build -t lincwest/multi-worker:latest ./worker
+  - docker build -t lincwest/multi-client ./client
+  - docker build -t lincwest/multi-nginx ./nginx
+  - docker build -t lincwest/multi-server ./server
+  - docker build -t lincwest/multi-worker ./worker
 # log in to docker CLI
-  - echo "$(DOCKER_PASSWORD)" | docker login -u "$(DOCKER_USERNAME)" --password-stdin
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 # Take those images and push them to docker hub
-  - docker push lincwest/multi-client:latest
-  - docker push lincwest/multi-nginx:latest
-  - docker push lincwest/multi-server:latest
-  - docker push lincwest/multi-worker:latest
+  - docker push lincwest/multi-client
+  - docker push lincwest/multi-nginx
+  - docker push lincwest/multi-server
+  - docker push lincwest/multi-worker
